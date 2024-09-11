@@ -7,7 +7,7 @@ import { H3 } from './Headers';
 import CodeBlock from './CodeBlock';
 import CodeIcon from './CodeIcon';
 
-const CodePanel = ({ heading, code, children }) => {
+const CodePanel = ({ heading, code = '', children }) => {
 	const [isOpen, setIsOpen] = useState(false);
 
 	return (
@@ -48,10 +48,6 @@ CodePanel.propTypes = {
 	heading: PropTypes.string.isRequired,
 	children: PropTypes.node.isRequired,
 	code: PropTypes.node,
-};
-
-CodePanel.defaultProps = {
-	code: '',
 };
 
 export default CodePanel;

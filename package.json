@@ -1,7 +1,7 @@
 {
 	"name": "@dsdeepak17/cogo-toast",
 	"description": "Beautiful, Zero Configuration, Toast Messages - Built with React",
-	"version": "4.3.1",
+	"version": "4.3.2",
 	"license": "MIT",
 	"scripts": {
 		"setup": "yarn install && cd docs && yarn install",

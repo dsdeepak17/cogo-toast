@@ -94,9 +94,4 @@ ToastContainer.propTypes = {
 	hiddenID: number,
 };
 
-ToastContainer.defaultProps = {
-	toast: undefined,
-	hiddenID: undefined,
-};
-
 export default ToastContainer;

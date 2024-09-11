@@ -12,7 +12,7 @@ import duotoneLight from 'prism-react-renderer/themes/duotoneLight';
 import duotoneDark from 'prism-react-renderer/themes/duotoneDark';
 import dracula from 'prism-react-renderer/themes/dracula';
 
-const CodeBlock = ({ children, className: langClass, theme }) => {
+const CodeBlock = ({ children, className = 'javascript', theme = 'darkPlus' }) => {
 	const themes = {
 		darkPlus: dark,
 		dark,
@@ -24,7 +24,8 @@ const CodeBlock = ({ children, className: langClass, theme }) => {
 		duotoneDark,
 		dracula,
 	};
-	const language = langClass.replace(/language-/, '');
+	const language = className.replace(/language-/, '');
+
 	return (
 		<Highlight {...defaultProps} code={children} language={language} theme={themes[theme]}>
 			{({ className, style, tokens, getLineProps, getTokenProps }) => (
@@ -56,11 +57,6 @@ CodeBlock.propTypes = {
 	children: node.isRequired,
 	className: string,
 	theme: string,
-};
-
-CodeBlock.defaultProps = {
-	className: 'javascript',
-	theme: 'darkPlus',
 };
 
 export default CodeBlock;

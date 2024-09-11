@@ -22,25 +22,37 @@ type CToastProps = CTOptions & {
 	hideAfter: number;
 };
 
-const Toast: React.FC<CToastProps> = (props) => {
-	const place = (props.position || 'top-center').includes('bottom') ? 'Bottom' : 'Top';
+const Toast: React.FC<CToastProps> = ({
+	id,
+	type,
+	text,
+	show = true,
+	onHide,
+	onClick,
+	hideAfter = 3,
+	heading,
+	position = 'top-center',
+	renderIcon,
+	bar = {},
+	role = 'status',
+}) => {
+	const place = position.includes('bottom') ? 'Bottom' : 'Top';
 	const marginType = `margin${place}`;
 
-	const className = [
-		'ct-toast',
-		props.onClick ? ' ct-cursor-pointer' : '',
-		`ct-toast-${props.type}`,
-	].join(' ');
-	const borderLeft = `${props.bar?.size || '3px'} ${props.bar?.style || 'solid'} ${props.bar
-		?.color || colors[props.type]}`;
+	const className = ['ct-toast', onClick ? ' ct-cursor-pointer' : '', `ct-toast-${type}`].join(' ');
 
-	const CurrentIcon = Icons[props.type];
+	const borderLeft = `${bar?.size || '3px'} ${bar?.style || 'solid'} ${bar?.color || colors[type]}`;
 
-	const [animStyles, setAnimStyles]: [any, Function] = useState({ opacity: 0, [marginType]: -15 });
+	const CurrentIcon = Icons[type];
+
+	const [animStyles, setAnimStyles]: [any, Function] = useState({
+		opacity: 0,
+		[marginType]: -15,
+	});
 
 	const style = {
-		paddingLeft: props.heading ? 25 : undefined,
-		minHeight: props.heading ? 50 : undefined,
+		paddingLeft: heading ? 25 : undefined,
+		minHeight: heading ? 50 : undefined,
 		borderLeft,
 		...animStyles,
 	};
@@ -49,7 +61,7 @@ const Toast: React.FC<CToastProps> = (props) => {
 		setAnimStyles({ opacity: 0, [marginType]: '-15px' });
 
 		setTimeout(() => {
-			props.onHide(props.id, props.position);
+			onHide(id, position);
 		}, 300);
 	};
 
@@ -60,10 +72,10 @@ const Toast: React.FC<CToastProps> = (props) => {
 
 		let hideTimeout;
 
-		if (props.hideAfter !== 0) {
+		if (hideAfter !== 0) {
 			hideTimeout = setTimeout(() => {
 				handleHide();
-			}, props.hideAfter * 1000);
+			}, hideAfter * 1000);
 		}
 
 		return () => {
@@ -76,32 +88,27 @@ const Toast: React.FC<CToastProps> = (props) => {
 	}, []);
 
 	useEffect(() => {
-		if (!props.show) {
+		if (!show) {
 			handleHide();
 		}
-	}, [props.show]);
+	}, [show]);
 
 	const clickProps = {
 		tabIndex: 0,
-		onClick: props.onClick,
+		onClick,
 		onKeyPress: (e: any) => {
 			if (e.keyCode === 13) {
-				props.onClick(e);
+				onClick(e);
 			}
 		},
 	};
 
 	return (
-		<div
-			className={className}
-			role={props.role ? props.role : 'status'}
-			style={style}
-			{...(props.onClick ? clickProps : {})}
-		>
-			{props.renderIcon ? props.renderIcon() : <CurrentIcon />}
-			<div className={props.heading ? 'ct-text-group-heading' : 'ct-text-group'}>
-				{props.heading && <h4 className="ct-heading">{props.heading}</h4>}
-				<div className="ct-text">{props.text}</div>
+		<div className={className} role={role} style={style} {...(onClick ? clickProps : {})}>
+			{renderIcon ? renderIcon() : <CurrentIcon />}
+			<div className={heading ? 'ct-text-group-heading' : 'ct-text-group'}>
+				{heading && <h4 className="ct-heading">{heading}</h4>}
+				<div className="ct-text">{text}</div>
 			</div>
 		</div>
 	);
@@ -120,19 +127,6 @@ Toast.propTypes = {
 	bar: shape({}),
 	onClick: func,
 	role: string,
-};
-
-Toast.defaultProps = {
-	id: undefined,
-	show: true,
-	onHide: undefined,
-	hideAfter: 3,
-	heading: undefined,
-	position: 'top-center',
-	renderIcon: undefined,
-	bar: {},
-	onClick: undefined,
-	role: 'status',
 };
 
 export default Toast;
